@@ -1,6 +1,6 @@
 'use client'
 
-import { Template, ImageCard, Button } from '@/components'
+import { Template, ImageCard, Button, InputText } from '@/components'
 import { useImageService } from '../resource/images/image.service';
 import { useState } from 'react'
 import { Image } from '../resource/images/image.resource';
@@ -42,16 +42,16 @@ export default function GaleriaPage(){
 
             <section className='flex flex-col items-center justify-center my-5'>
                 <div className=' flex space-x-4'>
-                    <input type="text" onChange={event => setQuery(event.target.value)}
-                        className='border px-5 py2 rounded-md text-gray-900'/>
-                    <select onChange={event =>setExtension(event.target.value)} className='bg-green-500 border px-4 py-2 rounded-md text-gray-900 hover:bg-green-300'>
+                    <InputText style='border px-5 py2 rounded-md text-gray-900' placeholder='Digite nome ou tag' onChange={event => setQuery(event.target.value)}/>
+                    <select onChange={event =>setExtension(event.target.value)} 
+                    className='border px-4 py-2 rounded-lg text-gray-900" hover:bg-green-100'>
                         <option>All formats</option>
                         <option value = "PNG">PNG</option>
                         <option value = "JPEG">JPEG</option>
                         <option value = "GIF">GIF</option>
                     </select>
 
-                    <Button style='bg-blue-500 hover:bg-gray-300' label='Search' onClick={searchImages} /> 
+                    <Button style='bg-blue-500 hover:bg-blue-300' label='Search' onClick={searchImages} /> 
                     
                     <Link href= '/formulario' >  
                         <Button style='bg-yellow-500 hover:bg-yellow-300' label='Add new'/>
