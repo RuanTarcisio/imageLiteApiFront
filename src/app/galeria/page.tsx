@@ -15,9 +15,7 @@ export default function GaleriaPage(){
     
     async function searchImages(){
         setLoading(true)
-        console.log("valor digitado: ", query)
         const result = await useService.buscar(query, extension);
-        
         setImages(result);
         setLoading(false)
     }
@@ -38,7 +36,7 @@ export default function GaleriaPage(){
     }
 
     return(
-        <Template>  
+        <Template loading={loading}>  
 
             <section className='flex flex-col items-center justify-center my-5'>
                 <div className=' flex space-x-4'>
