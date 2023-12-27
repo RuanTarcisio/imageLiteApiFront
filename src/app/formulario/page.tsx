@@ -1,6 +1,6 @@
 export default function FormularioPage(){
     return(
-        <h1>Formulario</h1>
+        <h1 className="text-white-600">Formulario</h1>
     )
 }
     

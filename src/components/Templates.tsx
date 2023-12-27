@@ -53,7 +53,7 @@ const Loading: React.FC = () => {
 
 const Header: React.FC = () => {
     return (
-        <header className="bg-red-500 text-white py-3" >
+        <header className="bg-gray-500 text-white py-3" >
             <div className="contaniner mx-auto flex justify-between itens-center px4">
                 <h1 className="text-4x1 font-bold">  ImageLite</h1>
             </div>
