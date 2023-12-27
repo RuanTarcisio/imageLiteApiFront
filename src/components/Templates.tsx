@@ -6,7 +6,7 @@ interface TemplateProps{
 }
 
 
-export const Template: React.FC<TemplateProps> = ({children, loading}) =>{
+export const Template: React.FC<TemplateProps> = ({children, loading = false}) =>{
 
     return (
 
