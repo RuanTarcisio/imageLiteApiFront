@@ -1,45 +1,44 @@
 'use client'
 
-import { Template, InputText, Button, RenderIf } from "@/components"
+import { Template, InputText, Button, RenderIf, useNotification, FieldError } from "@/components"
 import { useFormik } from "formik"
-import Link from "next/link"
 import { useState } from "react";
 import { useImageService } from '../resource/images/image.service';
+import { FormProps, formScheme, formValidationScheme } from "./formScheme";
+import Link from "next/link"
 
-interface FormProps{
-    name: string;
-    tags: string;
-    file: any;
-}
-
-const formScheme: FormProps = {name: '', tags: '', file: ''}
 
 export default function FormularioPage(){
 
     const [imagePreview, setImagePreview] = useState<string>();
     const [loading, setLoading] = useState<boolean>(false);
     const service = useImageService();
+    const notification = useNotification();
+
 
 
     const formik = useFormik<FormProps>({
         initialValues: formScheme,
-        onSubmit: handleSubmit
+        onSubmit: handleSubmit,
+        validationSchema: formValidationScheme
     })
 
     async function handleSubmit(dados: FormProps){
-        setLoading(false)
+        setLoading(true)
 
         const formData = new FormData();
         formData.append("file", dados.file);
         formData.append("name", dados.name);
         formData.append("tags", dados.tags);
 
-
         await service.salvar(formData)
 
         formik.resetForm();
         setImagePreview('')
 
+        setLoading(true)
+
+        notification.notify('Upload send successfully', 'success')
     }
 
     function onFileUpload(event: React.ChangeEvent<HTMLInputElement>){
@@ -65,6 +64,7 @@ export default function FormularioPage(){
                                     onChange={formik.handleChange} 
                                     value={formik.values.name} 
                                     placeholder="type the image's name" />
+                                    <FieldError error={formik.errors.name} />
                     </div>
 
                     <div className='mt-5 grid grid-cols-1'>
@@ -73,10 +73,12 @@ export default function FormularioPage(){
                                     onChange={formik.handleChange} 
                                     value={formik.values.tags} 
                                     placeholder="type the tagscomma separeted" />
+                                   <FieldError error={formik.errors.tags} />
                     </div>
 
                     <div className='mt-5 grid grid-cols-1'>
                         <label className='block text-sm font-medium leading-6 text-gray-700'>Image: *</label>
+                        <FieldError error={formik.errors.file} />
                         <div className=" mt-2 flex justify-center rounded-lg border border-dashed border-red-900/25 px-5 py-10">
                             <div className="text-center">
 
@@ -105,7 +107,7 @@ export default function FormularioPage(){
                     
                     <div className="mt-6 flex items-center justify-center gap-x-4">
                         <Button style="bg-blue-500 hover:bg-blue-300" type="submit" label="Save"/>
-                        <Link href="galeria">
+                        <Link href="/galeria">
                         <Button style="bg-red-500 hover:bg-red-300" type= "button" label="Cancel"/>
                         </Link>
                     </div>
