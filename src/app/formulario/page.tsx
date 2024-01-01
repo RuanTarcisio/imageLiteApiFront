@@ -3,7 +3,7 @@
 import { Template, InputText, Button, RenderIf, useNotification, FieldError } from "@/components"
 import { useFormik } from "formik"
 import { useState } from "react";
-import { useImageService } from '../resource/images/image.service';
+import { useImageService } from '../../resource/images/image.service';
 import { FormProps, formScheme, formValidationScheme } from "./formScheme";
 import Link from "next/link"
 

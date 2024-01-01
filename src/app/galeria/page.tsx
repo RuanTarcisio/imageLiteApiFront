@@ -1,9 +1,9 @@
 'use client'
 
 import { Template, ImageCard, Button, InputText, useNotification } from '@/components'
-import { useImageService } from '../resource/images/image.service';
+import { useImageService } from '../../resource';
 import { useState } from 'react'
-import { Image } from '../resource/images/image.resource';
+import { Image } from '../../resource/images/image.resource';
 import Link from 'next/link';
 
 
