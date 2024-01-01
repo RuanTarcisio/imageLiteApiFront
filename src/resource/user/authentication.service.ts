@@ -1,3 +1,4 @@
+import { log } from "console";
 import { AccessToken, Credentials, User, UserSessionToken } from "./users.resource";
 import {jwtDecode} from 'jwt-decode'
 
@@ -5,13 +6,12 @@ class AuthService{
     baseURL: string = "http://localhost:8080/v1/users";
     static AUTH_PARAM: string = "_auth" ;
 
-    async authenticate(credentials : Credentials){
-        const response = await fetch(this.baseURL + "/auth",{
-            method: "POST",
+    async authenticate(credentials: Credentials) : Promise<AccessToken> {
+        const response = await fetch(this.baseURL + "/auth", {
+            method: 'POST',
             body: JSON.stringify(credentials),
             headers: {
                 "Content-Type": "application/json"
-
             }
         });
 
@@ -19,8 +19,8 @@ class AuthService{
             throw new Error("User or password are incorrect!");
         }
 
-        return await response.json
-    }  
+        return await response.json();
+    }
     async save(user: User) : Promise<void> {
         const response = await fetch(this.baseURL, {
             method: 'POST',
@@ -39,6 +39,8 @@ class AuthService{
     initSession(token: AccessToken){
         if(token.accessToken){
             const decodedToken: any = jwtDecode(token.accessToken);
+
+            console.log(decodedToken)
             
             const userSessionToken: UserSessionToken = {
                 accessToken: token.accessToken,
