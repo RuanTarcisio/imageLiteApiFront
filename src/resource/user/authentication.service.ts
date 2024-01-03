@@ -79,7 +79,7 @@ class AuthService{
             return false;
         }
 
-        const expiration: number | undefined = userSession.expiration;
+        const expiration: number | undefined  = userSession.expiration;
         if(expiration){
             const expirationDateInMillis = expiration * 1000;
             return new Date() < new Date(expirationDateInMillis);
