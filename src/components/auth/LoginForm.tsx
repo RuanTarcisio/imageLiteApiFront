@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  LoginForm as LoginFormValues,
-  loginValidationScheme,
-} from "@/app/login/formScheme";
+import { LoginFormValues, loginValidationScheme } from "@/app/login/formScheme";
 import { InputText, Button, FieldError } from "@/components";
 import { useFormik } from "formik";
 import { useAuth } from "@/resource";
@@ -41,7 +38,7 @@ export const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
             Email:{" "}
           </label>
           <InputText
-            style="w-full"
+            style="w-full dark:bg-gray-700"
             id="email"
             value={values.email}
             onChange={handleChange}
@@ -54,7 +51,7 @@ export const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
             Password:{" "}
           </label>
           <InputText
-            style="w-full"
+            style="w-full dark:bg-gray-700"
             type="password"
             id="password"
             value={values.password}
@@ -65,8 +62,8 @@ export const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
 
         <Button
           type="submit"
-          style="bg-indigo-700 hover:bg-indigo-500"
-          label={loading ? "Logging in..." : "Login"}
+          style="bg-indigo-100 hover:bg-indigo-500 dark:text-white dark:bg-gray-700"
+          label={loading ? "Logging in..." : "Confirm"}
           disabled={loading}
         />
       </form>

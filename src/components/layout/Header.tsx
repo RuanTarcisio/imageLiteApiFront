@@ -30,11 +30,7 @@ export const Header = () => {
 
   return (
     <nav className="navbar bg-base-100 shadow flex justify-between items-center p-4 dark:bg-gray-800">
-      {/* Logo e Nome */}
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-          FlyonUI
-        </h1>
         {/* Links de Navegação */}
         <div className="hidden md:flex gap-6 text-gray-600 dark:text-gray-300">
           <button
@@ -57,6 +53,29 @@ export const Header = () => {
           </button>
         </div>
       </div>
+
+      <Button
+        className="hover:text-indigo-600"
+        onClick={() => router.push("/")}
+      >
+        <div className="flex space-x-4">
+          <Image src="/next.svg" alt="Logo" width={40} height={40} />
+
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center">
+            ImageLite
+          </h1>
+        </div>
+      </Button>
+
+      {/*  <Button
+          style="bg-red-700"
+          variant="outline"
+          type="button"
+          disabled={loading}
+          className="w-full"
+          onClick={handleGoogleLogin}
+        >
+        */}
 
       {/* Barra de Pesquisa
       <div className="hidden md:flex items-center border border-gray-300 rounded-full px-4 py-1 bg-white dark:bg-gray-700">
@@ -159,11 +178,22 @@ export const Header = () => {
             </MenuItems>
           </Menu>
         ) : (
-          <Button
-            style="bg-indigo-600 hover:bg-indigo-500"
-            label="Login"
-            onClick={() => router.push("/login")}
-          />
+          <div className="flex space-x-4">
+            {" "}
+            {/* Flexbox para alinhar os botões horizontalmente com espaçamento */}
+            <Button
+              className=" text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+              style="bg-teal-900 hover:bg-green-600 "
+              label="SignIn"
+              onClick={() => router.push("/login")}
+            />
+            <Button
+              className=" text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+              style="bg-indigo-700 hover:bg-blue-500"
+              label="SignUp"
+              onClick={() => router.push("/register")}
+            />
+          </div>
         )}
       </div>
     </nav>
