@@ -20,15 +20,15 @@ export interface RegisterFormValues {
 }
 
 export const registerValidationScheme = Yup.object({
-  name: Yup.string().required('Nome é obrigatório'),
-  email: Yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
+  name: Yup.string().required('Name is required'),
+  email: Yup.string().email('E-mail wrong').required('Email is required'),
   password: Yup.string().required('Senha é obrigatória'),
   passwordMatch: Yup.string()
-    .oneOf([Yup.ref('password')], 'As senhas não coincidem')
-    .required('Confirme a senha'),
+    .oneOf([Yup.ref('password')], 'Passwords do not match')
+    .required('Confirm password'),
   birthDate: Yup.date()
     .nullable()
-    .required('Data de nascimento é obrigatória')
+    .required('Date of birth is required')
     .max(new Date(), 'A data não pode ser no futuro')
-    .max(getMaxBirthDate(), 'Idade mínima, 06 anos de idade'), 
+    .max(getMaxBirthDate(), 'Minimum age, 6 years old'), 
   });

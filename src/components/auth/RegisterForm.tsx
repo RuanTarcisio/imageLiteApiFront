@@ -37,7 +37,7 @@ export const RegisterForm = ({
           Name:{" "}
         </label>
         <InputText
-          style="w-full"
+          style="w-full dark:bg-gray-700"
           id="name"
           value={values.name}
           onChange={handleChange}
@@ -50,7 +50,7 @@ export const RegisterForm = ({
           Email:{" "}
         </label>
         <InputText
-          style="w-full"
+          style="w-full dark:bg-gray-700"
           id="email"
           value={values.email}
           onChange={handleChange}
@@ -63,7 +63,7 @@ export const RegisterForm = ({
           Password:{" "}
         </label>
         <InputText
-          style="w-full"
+          style="w-full dark:bg-gray-700"
           type="password"
           id="password"
           value={values.password}
@@ -77,7 +77,7 @@ export const RegisterForm = ({
           Repeat Password:{" "}
         </label>
         <InputText
-          style="w-full"
+          style="w-full dark:bg-gray-700"
           type="password"
           id="passwordMatch"
           value={values.passwordMatch}

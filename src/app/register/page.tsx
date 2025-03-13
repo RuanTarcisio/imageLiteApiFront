@@ -29,7 +29,6 @@ export default function RegisterPage() {
     }
   };
 
-  // Define o tema corretamente
   const currentTheme = isMounted ? (theme === "system" ? systemTheme : theme) : "light";
 
   if (!isMounted) return null; // Evita erro de renderização no SSR
