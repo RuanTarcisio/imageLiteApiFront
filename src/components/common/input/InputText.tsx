@@ -15,6 +15,6 @@ export const InputText: React.FC<InputTextProps> = ({
     return (
         <input type={type}
                 {...outrasProps}
-                className={`${style} border px-3 py-2 rounded-lg text-gray-900`} />
+                className={`${style} border px-3 py-2 rounded-lg text-gray-900 dark:text-white`} />
     )
 }

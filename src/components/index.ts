@@ -1,6 +1,7 @@
-export { Button } from './button'
+export { Button } from './common/button'
 export { Template, RenderIf } from './Templates'
 export { ImageCard } from './ImageCard'
-export { InputText, FieldError} from './input'
-export { useNotification } from './notification'
-export { AuthenticatedPage } from './AuthenticatedPage'
+export { InputText, FieldError} from './common/input'
+export { useNotification } from './common/notification'
+export { default as AuthenticatedPage } from './AuthenticatedPage';
+export { LoginForm, RegisterForm } from './auth'

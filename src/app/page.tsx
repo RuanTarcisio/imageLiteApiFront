@@ -1,9 +1,9 @@
-import { Template } from "@/components/Templates" 
+import { Template } from "@/components/Templates";
 
 export default function Home() {
   return (
-   <div>
-   
+    <div>
+      <Template> </Template>
     </div>
-  )
+  );
 }
