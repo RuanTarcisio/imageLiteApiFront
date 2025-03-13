@@ -1,26 +1,26 @@
-import {  useAuth } from '@/resource'
-import Login from '@/app/login/page';
-
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/resource';
 
 interface AuthenticatedPageProps {
-    children: React.ReactNode
+    children: React.ReactNode;
 }
 
-export const AuthenticatedPage: React.FC<AuthenticatedPageProps> = ({
-    children
-}) => {
-
+export default function AuthenticatedPage({ children }: AuthenticatedPageProps) {
     const auth = useAuth();
+    const router = useRouter();
+    const [isClient, setIsClient] = useState(false);
 
-    if(auth.isSessionValid()){
-        return (
-            <>
-                {children}
-            </>
-        )
-        
+    useEffect(() => {
+        setIsClient(true);
+        if (!auth.isSessionValid()) {
+            router.push('/login');
+        }
+    }, [auth, router]);
+
+    if (!isClient || !auth.isSessionValid()) {
+        return null;
     }
 
-    return <Login />
-    
+    return <>{children}</>;
 }
