@@ -47,7 +47,7 @@ export default function LoginPage() {
   return (
     <Template loading={loading}>
       <div
-        className={`flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 
+        className={`flex flex-1 flex-col justify-center px-6 py-12 lg:px-8 
           ${currentTheme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
       >
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -55,7 +55,7 @@ export default function LoginPage() {
             Login to Your Account
           </h2>
         </div>
-
+  
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <LoginForm onSubmit={handleLogin} loading={loading} />
         </div>

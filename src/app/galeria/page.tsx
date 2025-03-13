@@ -68,7 +68,7 @@ export default function GaleriaPage() {
                             onClick={searchImages}
                         />
 
-                        <Link href='/formulario'>
+                        <Link href='/upload'>
                             <Button
                                 style='bg-yellow-500 hover:bg-yellow-300'
                                 label='Add new'
