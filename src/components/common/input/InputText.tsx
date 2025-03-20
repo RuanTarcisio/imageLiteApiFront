@@ -7,6 +7,7 @@ interface InputTextProps {
     id?: string;
     value?: string;
     type?: string;
+    name?: string;
 }
 
 export const InputText: React.FC<InputTextProps> = ({

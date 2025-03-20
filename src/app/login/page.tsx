@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Template, useNotification } from "@/components";
-import { LoginForm } from "@/components/auth/LoginForm";
-import { useAuth } from "@/resource";
+import { LoginForm } from "@/components/forms/auth/LoginForm";
+import { useAuth } from "@/resources";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 

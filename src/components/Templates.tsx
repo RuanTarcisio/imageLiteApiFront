@@ -1,7 +1,7 @@
 "use client";
 
 import { ToastContainer } from "react-toastify";
-import { Header } from "./layout/";
+import { Footer, Header } from "./layout/";
 
 interface TemplateProps {
   children: React.ReactNode;
@@ -35,13 +35,6 @@ export const Template: React.FC<TemplateProps> = ({
   );
 };
 
-const Footer: React.FC = () => {
-  return (
-    <footer className="bg-indigo-950 text-white py-4">
-      <div className="text-center">Made by Ruan Tarcisio</div>
-    </footer>
-  );
-};
 
 interface RenderIfProps {
   condition?: boolean;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/resource';
+import { useAuth } from '@/resources';
 
 interface AuthenticatedPageProps {
     children: React.ReactNode;

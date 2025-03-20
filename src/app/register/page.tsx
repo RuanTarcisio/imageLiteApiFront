@@ -1,7 +1,7 @@
 "use client";
 
 import { RegisterForm, Template, useNotification } from "@/components";
-import { useAuth } from "@/resource";
+import { useAuth } from "@/resources";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";

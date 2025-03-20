@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAuth } from "@/resource";
+import { useAuth } from "@/resources";
 import { useRouter } from 'next/navigation';
 import { IoShieldCheckmark } from "react-icons/io5";
 import Link from 'next/link';

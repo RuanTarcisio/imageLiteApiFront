@@ -1,9 +1,9 @@
 'use client'
 
 import { Template, ImageCard, Button, InputText, useNotification, AuthenticatedPage } from '@/components'
-import { useImageService } from '../../resource';
+import { useImageService } from '../../resources';
 import { useState } from 'react'
-import { Image } from '../../resource/images/image.resource';
+import { Image } from '../../resources/images/image.resource';
 import Link from 'next/link';
 
 export default function GaleriaPage() {

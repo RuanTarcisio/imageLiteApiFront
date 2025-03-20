@@ -3,7 +3,7 @@
 import { LoginFormValues, loginValidationScheme } from "@/app/login/formScheme";
 import { InputText, Button, FieldError } from "@/components";
 import { useFormik } from "formik";
-import { useAuth } from "@/resource";
+import { useAuth } from "@/resources";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 
 interface LoginFormProps {

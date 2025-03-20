@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { useAuth } from "@/resource";
+import { useAuth } from "@/resources";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Button } from "@/components";
@@ -111,7 +111,8 @@ export const Header = () => {
               </div>
             </MenuButton>
 
-            <MenuItems className="absolute right-0 mt-2 w-48 origin-top-right bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-opacity duration-200">
+            <MenuItems className="absolute right-0 mt-2 w-48 origin-top-right bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 
+                              focus:outline-none z-50 transition-opacity duration-200 text-black dark:text-white">
               <MenuItem>
                 <div className="p-4 flex items-center gap-2">
                   <div className="avatar">

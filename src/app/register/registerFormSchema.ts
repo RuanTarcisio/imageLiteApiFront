@@ -1,14 +1,13 @@
 import * as Yup from 'yup';
 
-// Função para calcular a data máxima (10 anos atrás a partir de hoje)
+// Função para calcular a data máxima (6 anos atrás a partir de hoje)
 const getMaxBirthDate = () => {
   const currentDate = new Date();
-  const maxBirthDate = new Date(
-    currentDate.getFullYear() - 6, // Subtrai 10 anos
+  return new Date(
+    currentDate.getFullYear() - 6, // Subtrai 6 anos para definir a idade mínima
     currentDate.getMonth(),
     currentDate.getDate()
   );
-  return maxBirthDate;
 };
 
 export interface RegisterFormValues {
@@ -16,19 +15,33 @@ export interface RegisterFormValues {
   email: string;
   password: string;
   passwordMatch: string;
-  birthDate: Date | null;
+  birthdate: Date | null;
+  cpf: string;
 }
 
 export const registerValidationScheme = Yup.object({
   name: Yup.string().required('Name is required'),
-  email: Yup.string().email('E-mail wrong').required('Email is required'),
-  password: Yup.string().required('Senha é obrigatória'),
+  
+  email: Yup.string()
+    .email('Invalid e-mail format') // Melhor mensagem
+    .required('Email is required'),
+
+  password: Yup.string()
+    .min(6, 'Password must be at least 6 characters') // Requisito comum
+    .required('Password is required'),
+
   passwordMatch: Yup.string()
     .oneOf([Yup.ref('password')], 'Passwords do not match')
-    .required('Confirm password'),
-  birthDate: Yup.date()
+    .required('Confirm password is required'),
+
+  birthdate: Yup.date()
     .nullable()
     .required('Date of birth is required')
-    .max(new Date(), 'A data não pode ser no futuro')
-    .max(getMaxBirthDate(), 'Minimum age, 6 years old'), 
-  });
+    .max(new Date(), 'Date cannot be in the future')
+    .max(getMaxBirthDate(), 'Minimum age is 6 years old'),
+
+  cpf: Yup.string()
+    .transform((value) => value.replace(/\D/g, '')) // Remove caracteres não numéricos
+    .matches(/^\d{11}$/, 'CPF must contain exactly 11 digits')
+    .required('CPF is required'),
+});
