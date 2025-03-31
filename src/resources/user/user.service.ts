@@ -1,10 +1,9 @@
-import { useAuth } from "./authentication.service";
-import { UserDto } from "./user.resource";
+import { UserDto, useAuth } from "@/resources";
 
 class UserService {
     baseURL: string = "http://localhost:8080";
     baseURLUser: string = `${this.baseURL}/v1/users`;
-     authService = useAuth();
+    authService = useAuth();
 
     private getAuthToken(): string | null {
         if (typeof window !== "undefined") {
@@ -76,7 +75,7 @@ class UserService {
             const formData = new FormData();
             formData.append("file", file);
 
-            const response = await fetch(`${this.baseURLUser}/profile/upload`, {
+            const response = await fetch(`${this.baseURLUser}/profile/${userId}/upload`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${this.getAuthToken()}`,
@@ -90,6 +89,29 @@ class UserService {
             }
         } catch (error: any) {
             throw new Error(error.message || "An error occurred while uploading the profile image");
+        }
+    }
+
+    async getProfileImage(): Promise<string | null> {
+        try {
+            const userId = this.authService.getUserIdFromToken(); 
+    
+            const response = await fetch(`${this.baseURLUser}/profile/${userId}/photo`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${this.getAuthToken()}`,
+                },
+            });
+    
+            if (!response.ok) {
+                return null; // Retorna null se não encontrar a imagem
+            }
+    
+            const blob = await response.blob();
+            return URL.createObjectURL(blob); // Cria um URL para exibir a imagem no navegador
+        } catch (error) {
+            console.error("Error fetching profile image:", error);
+            return null;
         }
     }
 }

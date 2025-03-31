@@ -1,4 +1,4 @@
-import { AccessToken, Credentials, User, UserDto, UserSessionToken } from "./auth.resource";
+import { AccessToken, Credentials, UserInputRegister, UserDto, UserSessionToken } from "@/resources";
 import { jwtDecode } from 'jwt-decode';
 
 class AuthService {
@@ -43,7 +43,7 @@ class AuthService {
         return this.isSessionValid();
     }
 
-    async save(user: User): Promise<void> {
+    async save(user: UserInputRegister): Promise<void> {
         try {
             const response = await fetch(`${this.baseURLUser}/signup`, {
                 method: 'POST',

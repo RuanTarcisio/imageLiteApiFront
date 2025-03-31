@@ -2,17 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button, useNotification } from "@/components";
-import { ProfileForm, Template } from "@/components";
+import { Button, useNotification, ProfileForm, Template } from "@/components";
 import { useTheme } from "next-themes";
-import { useUserService } from "@/resources";
-import { UserDto } from "@/resources/user/user.resource";
+import { useUserService, UserDto, useAuth } from "@/resources";
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState<UserDto>({} as UserDto);
-
+  const auth = useAuth(); 
   const notification = useNotification();
   const { theme, systemTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
@@ -27,6 +25,7 @@ export default function ProfilePage() {
     try {
       setLoading(true);
       const userData = await userService.getProfile();
+        // const profileImage = await userService.ge
 
       setUser({
         name: userData.name ?? "",
