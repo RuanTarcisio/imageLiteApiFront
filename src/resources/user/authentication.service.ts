@@ -1,7 +1,7 @@
 import { AccessToken, Credentials, UserInputRegister, UserDto, UserSessionToken } from "@/resources";
 import { jwtDecode } from 'jwt-decode';
 
-class AuthService {
+export class AuthService {
     baseURL: string = "http://localhost:8080";
     baseURLUser: string = `${this.baseURL}/v1/auth`;
     static AUTH_PARAM: string = "_auth";
@@ -162,6 +162,37 @@ class AuthService {
             throw new Error(`Failed to invalidate session: ${error.message}`);
         }
     }
+
+    async validateToken(token: string): Promise<boolean> {
+        try {
+            const response = await fetch(`${this.baseURL}/validate-token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response.ok;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async refreshToken(): Promise<AccessToken | null> {
+        try {
+            const response = await fetch(`${this.baseURL}/refresh-token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.getAccessToken()}`
+                }
+            });
+            return response.ok ? response.json() : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
 }
 
 export const useAuth = () => new AuthService();

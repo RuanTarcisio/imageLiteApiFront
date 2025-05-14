@@ -3,7 +3,7 @@ import 'react-toastify/ReactToastify.min.css'
 import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
-import { AuthProvider } from './profile/ProfileContext'
+import { AuthProvider } from '../contexts/ProfileContext'
 
 const roboto = Roboto({ subsets: ['latin'], weight: "300" })
 

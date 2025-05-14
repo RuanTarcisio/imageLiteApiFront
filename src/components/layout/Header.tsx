@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { Sun, Moon, User, Settings, LogOut } from "lucide-react";
 import { Button } from "../common";
-import { useAuthContext } from "@/app/profile/ProfileContext";
+import { useAuthContext } from "@/contexts/ProfileContext";
 import { useAuth } from "@/resources";
 
 export const Header = () => {

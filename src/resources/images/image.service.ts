@@ -1,12 +1,25 @@
 import { Image } from "../types"; 
+import { useAuth } from "@/resources";
 
 class ImageService {
     baseURL: string = 'http://localhost:8080/v1/images';
+    baseURLUser: string = `${this.baseURL}/v1/users`;
+    authService = useAuth();
+    
+    private async getValidAuthToken(): Promise<string> {
+        const token = this.authService.getAccessToken();
+        
+        if (!token || !this.authService.isSessionValid()) {
+            throw new Error('Sessão expirada ou token inválido');
+        }
+        return token;
+    }
+    
 
     async buscar(query: string = "", extension: string = ""): Promise<Image[] | undefined> {
         if (typeof query !== "string" || typeof extension !== "string") {
             console.error("Parâmetros de busca inválidos.");
-            return undefined; // Retorna undefined em vez de lançar uma exceção
+            return undefined; 
         }
 
         try {
@@ -15,94 +28,63 @@ class ImageService {
 
             if (!response.ok) {
                 console.error(`Erro na requisição: ${response.statusText}`);
-                return undefined; // Retorna undefined em caso de erro na requisição
+                return undefined;
             }
 
             return await response.json();
         } catch (error) {
             console.error("Erro ao buscar imagens:", error);
-            return undefined; // Retorna undefined em caso de erro
+            return undefined; 
         }
     }
 
-    async salvar(dados: FormData): Promise<string | undefined> {
+    async salvar(dados: FormData): Promise<string> {
         try {
+            const token = await this.getValidAuthToken();
+            
             const response = await fetch(this.baseURL, {
                 method: 'POST',
                 body: dados,
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                },
+                    'Authorization': `Bearer ${token}`,
+                }
             });
-
+    
             if (!response.ok) {
-                console.error(`Erro na requisição: ${response.statusText}`);
-                                throw new Error(`Erro na requisição: ${response.statusText}`);
-// return undefined; // Retorna undefined em caso de erro na requisição
+                const errorText = await response.text();
+                let errorMessage = 'Falha ao salvar imagem';
+                
+                try {
+                    const errorData = JSON.parse(errorText);
+                    errorMessage = errorData.message || errorMessage;
+                } catch {
+                    errorMessage = errorText || errorMessage;
+                }
+                
+                throw new Error(errorMessage);
             }
-            console.log(localStorage.getItem('token'))                                                                                          
-            return response.headers.get('location') ?? undefined;
+     
+            const locationHeader = response.headers.get('Location');
+            if (locationHeader) {
+                return locationHeader; // Retorna a URL do cabeçalho Location
+            }
+
+            const responseBody = await response.text();
+            if (responseBody) {
+                return responseBody;  // Retorna o corpo caso haja alguma URL nele
+            }
+    
+            throw new Error('A URL da imagem não foi retornada pelo servidor');
         } catch (error) {
-            console.error("Erro ao salvar imagem:", error);
-            return undefined; // Retorna undefined em caso de erro
+            console.error('Erro no ImageService:', error);
+            throw new Error(
+                error instanceof Error 
+                    ? error.message 
+                    : 'Ocorreu um erro ao tentar salvar a imagem'
+            );
         }
     }
+    
 }
 
 export const useImageService = () => new ImageService();
-
-
-
-
-
-
-
-
-// import { Image } from "./image.resource";
-
-// class ImageService {
-//     baseURL: string = 'http://localhost:8080/v1/images';
-
-//     async buscar(query: string = "", extension: string = ""): Promise<Image[]> {
-//         if (typeof query !== "string" || typeof extension !== "string") {
-//             throw new Error("Parâmetros de busca inválidos.");
-//         }
-
-//         try {
-//             const url = `${this.baseURL}?extension=${encodeURIComponent(extension)}&query=${encodeURIComponent(query)}`;
-//             const response = await fetch(url);
-
-//             if (!response.ok) {
-//                 throw new Error(`Erro na requisição: ${response.statusText}`);
-//             }
-
-//             return await response.json();
-//         } catch (error) {
-//             console.error("Erro ao buscar imagens:", error);
-//             throw new Error("Não foi possível carregar as imagens.");
-//         }
-//     }
-
-//     async salvar(dados: FormData): Promise<string> {
-//         try {
-//             const response = await fetch(this.baseURL, {
-//                 method: 'POST',
-//                 body: dados,
-//                 headers: {
-//                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
-//                 },
-//             });
-
-//             if (!response.ok) {
-//                 throw new Error(`Erro na requisição: ${response.statusText}`);
-//             }
-
-//             return response.headers.get('location') ?? '';
-//         } catch (error) {
-//             console.error("Erro ao salvar imagem:", error);
-//             throw new Error("Não foi possível salvar a imagem.");
-//         }
-//     }
-// }
-
-// export const useImageService = () => new ImageService();

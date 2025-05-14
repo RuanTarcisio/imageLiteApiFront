@@ -35,14 +35,15 @@ export default function GaleriaPage() {
 
   function renderImageCard(image: Image) {
     return (
-      <ImageCard
-        key={image.url}
-        nome={image.name}
-        src={image.url}
-        tamanho={image.size}
-        dataUpload={image.uploadDate}
-        extension={image.extension}
-      />
+      <div key={image.url} className="w-full p-2">
+        <ImageCard
+          nome={image.name}
+          src={image.url}
+          tamanho={image.size}
+          dataUpload={image.uploadDate}
+          extension={image.extension}
+        />
+      </div>
     );
   }
 
@@ -53,13 +54,15 @@ export default function GaleriaPage() {
   return (
     <AuthenticatedPage>
       <Template loading={loading}>
-        <section className="flex flex-col items-center justify-center my-5">
-          <div className="flex space-x-4">
+        {/* Seção de busca responsiva */}
+        <section className="flex flex-col items-center justify-center my-5 px-4">
+          <div className="flex flex-col md:flex-row w-full max-w-4xl gap-3">
             <InputText
-              style="border px-5 py-2 rounded-md text-gray-900"
+              style="flex-grow border px-5 py-2 rounded-md text-gray-900"
               placeholder="Digite nome ou tag"
               onChange={(event) => setQuery(event.target.value)}
             />
+            
             <select
               onChange={(event) => setExtension(event.target.value)}
               className="border px-4 py-2 rounded-lg text-gray-900 hover:bg-green-100"
@@ -70,24 +73,35 @@ export default function GaleriaPage() {
               <option value="GIF">GIF</option>
             </select>
 
-            <Button
-              style="bg-blue-500 hover:bg-blue-300"
-              label="Search"
-              onClick={searchImages}
-            />
-
-            <Link href="/upload">
+            <div className="flex gap-3">
               <Button
-                style="bg-yellow-500 hover:bg-yellow-300"
-                label="Add new"
+                className="bg-blue-500 hover:bg-blue-300 px-4 py-2 rounded-lg"
+                label="Search"
+                onClick={searchImages}
               />
-            </Link>
+
+              <Link href="/upload" className="flex">
+                <Button
+                  className="bg-yellow-500 hover:bg-yellow-300 px-4 py-2 rounded-lg"
+                  label="Add new"
+                />
+              </Link>
+            </div>
           </div>
         </section>
 
-        <section className="grid grid-cols-4 gap-8">
+        {/* Galeria de imagens responsiva */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-4">
           {renderImageCards()}
         </section>
+
+        {/* Mensagem quando não há imagens */}
+        {!loading && images.length === 0 && (
+          <div className="text-center py-10">
+            <p className="text-gray-500 text-lg">Nenhuma imagem encontrada</p>
+            <p className="text-gray-400">Tente alterar seus critérios de busca</p>
+          </div>
+        )}
       </Template>
     </AuthenticatedPage>
   );
