@@ -3,7 +3,7 @@ import 'react-toastify/ReactToastify.min.css'
 import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
-
+import { AuthProvider } from './profile/ProfileContext'
 
 const roboto = Roboto({ subsets: ['latin'], weight: "300" })
 
@@ -18,20 +18,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className={roboto.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider> {/* Adicione o AuthProvider aqui */}
             {children}
-          </ThemeProvider>
-        </body>
-      </html>
-    </>
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }

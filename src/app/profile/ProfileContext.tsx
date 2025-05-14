@@ -1,51 +1,87 @@
 "use client";
-
-import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "@/resources";
-import { useUserService } from "@/resources";
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
+import { useAuth, useUserService } from "@/resources";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   profileImage: string | null;
-  reloadProfileImage: () => void;
+  updateAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   profileImage: null,
-  reloadProfileImage: () => {},
+  updateAuth: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const auth = useAuth();
   const userService = useUserService();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [state, setState] = useState({
+    isAuthenticated: false,
+    profileImage: null as string | null,
+  });
+  const isMounted = useRef(true);
 
-  const fetchProfileImage = async () => {
-    if (auth.isSessionValid()) {
-      try {
-        const image = await userService.getProfileImage();
-        setProfileImage(image || "/default-avatar.png");
-      } catch (error) {
-        console.error("Erro ao carregar imagem do perfil:", error);
-        setProfileImage("/default-avatar.png");
-      }
+  const fetchProfileImage = useCallback(async () => {
+    if (!auth.isSessionValid()) return null;
+    
+    try {
+      return await userService.getProfileImage() || "/default-avatar.png";
+    } catch (error) {
+      console.error("Error loading profile image:", error);
+      return "/default-avatar.png";
     }
-  };
+  }, [auth, userService]);
+
+  const updateAuth = useCallback(async () => {
+    if (!isMounted.current) return;
+    
+    const isAuthenticated = auth.isSessionValid();
+    const profileImage = isAuthenticated ? await fetchProfileImage() : null;
+    
+    setState(prev => {
+      // Só atualiza se os valores realmente mudaram
+      if (prev.isAuthenticated === isAuthenticated && prev.profileImage === profileImage) {
+        return prev;
+      }
+      return { isAuthenticated, profileImage };
+    });
+  }, [auth, fetchProfileImage]);
 
   useEffect(() => {
-    setIsAuthenticated(auth.isSessionValid());
-    fetchProfileImage();
-  }, [auth.isSessionValid()]);
+    // Atualização inicial
+    updateAuth();
+
+    // Listener para mudanças no storage
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === '_auth') {
+        updateAuth();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      isMounted.current = false;
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [updateAuth]); // Dependência estável graças ao useCallback
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, profileImage, reloadProfileImage: fetchProfileImage }}
-    >
+    <AuthContext.Provider value={{ 
+      ...state, 
+      updateAuth 
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuthContext = () => useContext(AuthContext);
+export const useAuthContext = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuthContext must be used within an AuthProvider');
+  }
+  return context;
+};

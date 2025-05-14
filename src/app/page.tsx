@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div>
       <Template>
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+        <div className="bg-gray-50 dark:bg-gray-900 p-8">
           <header className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
               Bem-vindo ao ImageLite

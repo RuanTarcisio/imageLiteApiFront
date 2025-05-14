@@ -1,4 +1,4 @@
-import { Image } from "./image.resource";
+import { Image } from "../types"; 
 
 class ImageService {
     baseURL: string = 'http://localhost:8080/v1/images';
@@ -37,9 +37,10 @@ class ImageService {
 
             if (!response.ok) {
                 console.error(`Erro na requisição: ${response.statusText}`);
-                return undefined; // Retorna undefined em caso de erro na requisição
+                                throw new Error(`Erro na requisição: ${response.statusText}`);
+// return undefined; // Retorna undefined em caso de erro na requisição
             }
-
+            console.log(localStorage.getItem('token'))                                                                                          
             return response.headers.get('location') ?? undefined;
         } catch (error) {
             console.error("Erro ao salvar imagem:", error);

@@ -25,21 +25,25 @@ export default function FormularioPage(){
 
     async function handleSubmit(dados: FormProps){
         setLoading(true)
-
+    
         const formData = new FormData();
         formData.append("file", dados.file);
         formData.append("name", dados.name);
-        formData.append("tags", dados.tags);
-
+    
+        dados.tags
+            .split(',')
+            .map(tag => tag.trim())
+            .forEach(tag => formData.append("tags", tag));
+    
         await service.salvar(formData)
-
+    
         formik.resetForm();
         setImagePreview('')
-
-        setLoading(true)
-
+        setLoading(false)
+    
         notification.notify('Upload send successfully', 'success')
     }
+    
 
     function onFileUpload(event: React.ChangeEvent<HTMLInputElement>){
         

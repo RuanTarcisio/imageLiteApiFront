@@ -1,68 +1,67 @@
-import { FaGithub, FaInstagram, FaLinkedin, FaGoogle } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaLinkedin, FaGoogle, FaRocket } from "react-icons/fa";
 
 export const Footer = () => {
   return (
-    <footer className="footer bg-base-200 dark:bg-base-300 px-6 py-4 text-black dark:text-white">
-      <div className="flex w-full flex-wrap items-center justify-between">
-        {/* Logo e Nome */}
-        <div className="flex items-center gap-2 text-xl font-bold">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M17.6745 16.9224L12.6233 10.378C12.2167 9.85117 11.4185 9.8611 11.0251 10.3979L6.45728 16.631C6.26893 16.888 5.96935 17.0398 5.65069 17.0398H3.79114C2.9635 17.0398 2.49412 16.0919 2.99583 15.4336L11.0224 4.90319C11.4206 4.38084 12.2056 4.37762 12.608 4.89668L20.9829 15.6987C21.4923 16.3558 21.024 17.3114 20.1926 17.3114H18.4661C18.1562 17.3114 17.8638 17.1677 17.6745 16.9224ZM12.5866 15.5924L14.8956 18.3593C15.439 19.0105 14.976 20 14.1278 20H9.74075C8.9164 20 8.4461 19.0586 8.94116 18.3994L11.0192 15.6325C11.4065 15.1169 12.1734 15.0972 12.5866 15.5924Z"
-              fill="currentColor"
-            />
-          </svg>
-          <span>RTarcisio</span>
+    <footer className="w-full bg-base-200 dark:bg-base-800 text-black dark:text-white border-t border-base-300 dark:border-base-700">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Logo e Nome */}
+          <div className="flex items-center gap-3">
+            <div className="text-primary dark:text-primary-400">
+              <FaRocket className="text-2xl" />
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              ImageLite
+            </span>
+          </div>
+
+          {/* Redes Sociais */}
+          <div className="flex gap-6">
+            <a
+              href="https://github.com/RuanTarcisio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary dark:hover:text-primary-400 transition-colors duration-200"
+              aria-label="Github"
+            >
+              <FaGithub className="size-6" />
+            </a>
+            <a
+              href="https://www.instagram.com/dev.correria/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-pink-600 dark:hover:text-pink-400 transition-colors duration-200"
+              aria-label="Instagram"
+            >
+              <FaInstagram className="size-6" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/ruan-tarcisio/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+              aria-label="LinkedIn"
+            >
+              <FaLinkedin className="size-6" />
+            </a>
+            <a
+              href="mailto:dev.correria@gmail.com"
+              className="hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
+              aria-label="Enviar email"
+            >
+              <FaGoogle className="size-6" />
+            </a>
+          </div>
         </div>
 
-        {/* Copyright */}
-        <aside className="grid-flow-col items-center">
+        {/* Copyright - Centralizado */}
+        <div className="mt-8 text-center text-sm text-base-content/70 dark:text-base-content/50">
           <p>
-            ©2025{" "}
-            <a className="link link-hover font-medium" href="#">
-              RuanTarcisio
-            </a>
+            © {new Date().getFullYear()} ImageLite. Todos os direitos reservados.
           </p>
-        </aside>
-
-        {/* Redes Sociais */}
-        <div className="flex h-5 gap-4">
-          <a
-            href="https://github.com/RuanTarcisio"
-            className="link hover:text-primary-content"
-            aria-label="Github Link"
-          >
-            <FaGithub className="size-5" />
-          </a>
-          <a
-            href="https://www.instagram.com/ruantarciisio/"
-            className="link hover:text-primary-content"
-            aria-label="Instagram Link"
-          >
-            <FaInstagram className="size-5" />
-          </a>
-          <a
-            href="https://www.linkedin.com/in/ruan-tarcisio/"
-            className="link hover:text-primary-content"
-            aria-label="LinkedIn Link"
-          >
-            <FaLinkedin className="size-5" />
-          </a>
-          <a
-            href="mailto:ruantarciisio@gmail.com"
-            className="link hover:text-primary-content"
-            aria-label="E-mail"
-          >
-            <FaGoogle className="size-5" />
-          </a>
+          <p className="mt-2">
+            Desenvolvido com <span className="text-primary">Next.js</span> e ❤️
+          </p>
         </div>
       </div>
     </footer>
