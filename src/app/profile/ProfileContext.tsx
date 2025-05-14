@@ -6,72 +6,75 @@ interface AuthContextType {
   isAuthenticated: boolean;
   profileImage: string | null;
   updateAuth: () => Promise<void>;
+  clearAuth: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   profileImage: null,
   updateAuth: async () => {},
+  clearAuth: () => {}
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const auth = useAuth();
-  const userService = useUserService();
+  const auth = useRef(useAuth());
+  const userService = useRef(useUserService());
+
   const [state, setState] = useState({
     isAuthenticated: false,
     profileImage: null as string | null,
   });
-  const isMounted = useRef(true);
 
   const fetchProfileImage = useCallback(async () => {
-    if (!auth.isSessionValid()) return null;
-    
+    if (!auth.current.isSessionValid()) return null;
+  
+    const cached = sessionStorage.getItem("profileImage");
+    if (cached) return cached;
+  
     try {
-      return await userService.getProfileImage() || "/default-avatar.png";
+      const img = await userService.current.getProfileImage();
+      const finalImage = img || "/default-avatar.png";
+      sessionStorage.setItem("profileImage", finalImage);
+      return finalImage;
     } catch (error) {
       console.error("Error loading profile image:", error);
       return "/default-avatar.png";
     }
-  }, [auth, userService]);
+  }, []);
 
   const updateAuth = useCallback(async () => {
-    if (!isMounted.current) return;
-    
-    const isAuthenticated = auth.isSessionValid();
+    const isAuthenticated = auth.current.isSessionValid();
     const profileImage = isAuthenticated ? await fetchProfileImage() : null;
-    
-    setState(prev => {
-      // Só atualiza se os valores realmente mudaram
-      if (prev.isAuthenticated === isAuthenticated && prev.profileImage === profileImage) {
-        return prev;
-      }
-      return { isAuthenticated, profileImage };
+
+    setState({ isAuthenticated, profileImage });
+  }, [fetchProfileImage]);
+
+  const clearAuth = useCallback(() => {
+    setState({
+      isAuthenticated: false,
+      profileImage: null
     });
-  }, [auth, fetchProfileImage]);
+  }, []);
+
+  // ⚠️ useEffect com array vazio só roda 1x
+  useEffect(() => {
+    updateAuth();
+  }, []);
 
   useEffect(() => {
-    // Atualização inicial
-    updateAuth();
-
-    // Listener para mudanças no storage
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === '_auth') {
-        updateAuth();
-      }
+      if (e.key === '_auth') updateAuth();
     };
 
     window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      isMounted.current = false;
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [updateAuth]); // Dependência estável graças ao useCallback
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [updateAuth]);
 
   return (
     <AuthContext.Provider value={{ 
       ...state, 
-      updateAuth 
+      updateAuth,
+      clearAuth
     }}>
       {children}
     </AuthContext.Provider>

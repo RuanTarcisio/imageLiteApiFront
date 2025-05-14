@@ -12,10 +12,9 @@ import { useAuth } from "@/resources";
 export const Header = () => {
   const { theme, setTheme, systemTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
-  const { isAuthenticated, profileImage, updateAuth } = useAuthContext();
   const router = useRouter();
   const auth = useAuth();
-
+  const { isAuthenticated, profileImage, updateAuth, clearAuth } = useAuthContext();
   // Verifica se o componente está montado para evitar hidratação
   useEffect(() => setIsMounted(true), []);
 
@@ -24,9 +23,9 @@ export const Header = () => {
   const handleLogout = async () => {
     try {
       await auth.invalidateSession();
-      await updateAuth();
+      clearAuth(); // Limpa o estado imediatamente
       router.push("/");
-      setTimeout(() => router.refresh(), 100); // Força atualização com pequeno delay
+      setTimeout(() => router.refresh(), 100);
     } catch (error) {
       console.error("Falha no logout:", error);
     }
@@ -65,7 +64,9 @@ export const Header = () => {
           <Button
             variant="ghost"
             onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
-            aria-label={`Alternar para tema ${currentTheme === "dark" ? "claro" : "escuro"}`}
+            aria-label={`Alternar para tema ${
+              currentTheme === "dark" ? "claro" : "escuro"
+            }`}
             className="hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             {currentTheme === "dark" ? (
@@ -75,8 +76,8 @@ export const Header = () => {
             )}
           </Button>
 
-         {/* Auth Section */}
-         {isAuthenticated ? (
+          {/* Auth Section */}
+          {isAuthenticated ? (
             <Menu as="div" className="relative">
               <MenuButton
                 as={Button}
@@ -99,7 +100,7 @@ export const Header = () => {
                   <MenuItem>
                     <button
                       onClick={() => router.push("/profile")}
-                      className="flex items-center w-full px-4 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="flex items-center w-full px-4 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white"
                     >
                       <User className="mr-2 h-4 w-4" />
                       Meu Perfil
@@ -108,7 +109,7 @@ export const Header = () => {
                   <MenuItem>
                     <button
                       onClick={() => router.push("/settings")}
-                      className="flex items-center w-full px-4 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="flex items-center w-full px-4 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white"
                     >
                       <Settings className="mr-2 h-4 w-4" />
                       Configurações
@@ -143,7 +144,6 @@ export const Header = () => {
               >
                 Registrar
               </Button>
-            
             </div>
           )}
         </div>

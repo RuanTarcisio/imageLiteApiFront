@@ -94,7 +94,7 @@ class UserService {
 
     async getProfileImage(): Promise<string | null> {
         try {
-            const userId = this.authService.getUserIdFromToken(); 
+            const userId = this.authService.getUserIdFromToken();
     
             const response = await fetch(`${this.baseURLUser}/profile/${userId}/photo`, {
                 method: "GET",
@@ -108,12 +108,22 @@ class UserService {
             }
     
             const blob = await response.blob();
-            return URL.createObjectURL(blob); // Cria um URL para exibir a imagem no navegador
+    
+            // Converte o blob para base64
+            const reader = new FileReader();
+            return new Promise<string | null>((resolve, reject) => {
+                reader.onloadend = () => {
+                    resolve(reader.result as string);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob); // Converte o blob em Data URL
+            });
         } catch (error) {
             console.error("Error fetching profile image:", error);
             return null;
         }
     }
+    
 }
 
 export const useUserService = () => new UserService();
