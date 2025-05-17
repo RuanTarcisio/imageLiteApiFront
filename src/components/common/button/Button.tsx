@@ -1,7 +1,7 @@
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    style?: string;
+    btnStyle?: string;
     label?: string;
     variant?: string;
     children?: React.ReactNode;
@@ -11,7 +11,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     (
         {
             onClick,
-            style,
+            btnStyle,
             label,
             type = "button",
             variant,
@@ -25,7 +25,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         return (
             <button
                 ref={ref}
-                className={`${style} ${className} px-4 py-2 rounded-lg transition-colors`}
+                className={`${btnStyle} ${className} px-4 py-2 rounded-lg transition-colors`}
                 type={type}
                 onClick={onClick}
                 disabled={disabled}

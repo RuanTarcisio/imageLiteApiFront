@@ -56,6 +56,7 @@ export default function FormularioPage() {
       );
     } finally {
       setLoading(false);
+      console.log("ond estou")
       router.push("/galeria");
     }
   }
@@ -152,13 +153,13 @@ export default function FormularioPage() {
 
             <div className="mt-6 flex items-center justify-center gap-x-4">
               <Button
-                style="bg-blue-500 hover:bg-blue-300"
+                className="bg-blue-500 hover:bg-blue-300"
                 type="submit"
                 label="Save"
               />
               <Link href="/galeria">
                 <Button
-                  style="bg-red-500 hover:bg-red-300"
+                  className="bg-red-500 hover:bg-red-300"
                   type="button"
                   label="Cancel"
                 />

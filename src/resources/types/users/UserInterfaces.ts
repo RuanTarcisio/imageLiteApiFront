@@ -6,11 +6,11 @@ export interface UpdateUserDto {
 }
 
 export interface UserDto {
-  id?: number;
-  name?: string;
-  email?: string;
-  birthdate?: Date | null;
+  name: string;
+  email: string;
   cpf?: string;
+  birthdate?: Date | null;
+  profileImage?: string | File | null;
 }
 
 export interface UserInputRegister {
@@ -18,7 +18,7 @@ export interface UserInputRegister {
   email?: string;
   password?: string;
   cpf: string;
-  birthday?: Date | null;
+  birthdate?: Date | null;
   profileImage?: File | string | undefined;
 }
 

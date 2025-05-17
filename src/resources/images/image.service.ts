@@ -1,21 +1,9 @@
-import { Image } from "../types"; 
-import { useAuth } from "@/resources";
+import { Image } from "@/resources"; 
+import { useAuthStore } from "@/contexts/AuthStore"; 
 
 class ImageService {
-    baseURL: string = 'http://localhost:8080/v1/images';
-    baseURLUser: string = `${this.baseURL}/v1/users`;
-    authService = useAuth();
+    private baseURL: string = 'http://localhost:8080/v1/images';
     
-    private async getValidAuthToken(): Promise<string> {
-        const token = this.authService.getAccessToken();
-        
-        if (!token || !this.authService.isSessionValid()) {
-            throw new Error('Sessão expirada ou token inválido');
-        }
-        return token;
-    }
-    
-
     async buscar(query: string = "", extension: string = ""): Promise<Image[] | undefined> {
         if (typeof query !== "string" || typeof extension !== "string") {
             console.error("Parâmetros de busca inválidos.");
@@ -24,7 +12,9 @@ class ImageService {
 
         try {
             const url = `${this.baseURL}?extension=${encodeURIComponent(extension)}&query=${encodeURIComponent(query)}`;
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                credentials: 'include' // Inclui cookies automaticamente
+            });
 
             if (!response.ok) {
                 console.error(`Erro na requisição: ${response.statusText}`);
@@ -40,14 +30,20 @@ class ImageService {
 
     async salvar(dados: FormData): Promise<string> {
         try {
-            const token = await this.getValidAuthToken();
+            // Verifica autenticação antes de continuar
+            const { isAuthenticated, checkSession } = useAuthStore.getState();
             
+            if (!isAuthenticated) {
+                await checkSession();
+                if (!useAuthStore.getState().isAuthenticated) {
+                    throw new Error('Usuário não autenticado');
+                }
+            }
+
             const response = await fetch(this.baseURL, {
                 method: 'POST',
                 body: dados,
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
+                credentials: 'include' // Inclui cookies automaticamente
             });
     
             if (!response.ok) {
@@ -66,12 +62,12 @@ class ImageService {
      
             const locationHeader = response.headers.get('Location');
             if (locationHeader) {
-                return locationHeader; // Retorna a URL do cabeçalho Location
+                return locationHeader;
             }
 
             const responseBody = await response.text();
             if (responseBody) {
-                return responseBody;  // Retorna o corpo caso haja alguma URL nele
+                return responseBody;
             }
     
             throw new Error('A URL da imagem não foi retornada pelo servidor');
@@ -85,6 +81,31 @@ class ImageService {
         }
     }
     
+    // Método adicional para deletar imagem
+    async deletar(imageId: number): Promise<void> {
+        try {
+            const { isAuthenticated } = useAuthStore.getState();
+            
+            if (!isAuthenticated) {
+                throw new Error('Usuário não autenticado');
+            }
+
+            const response = await fetch(`${this.baseURL}/${imageId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Falha ao deletar imagem');
+            }
+        } catch (error) {
+            console.error('Erro ao deletar imagem:', error);
+            throw error;
+        }
+    }
 }
 
-export const useImageService = () => new ImageService();
+// Hook para usar o serviço
+export const useImageService = () => {
+    return new ImageService();
+};

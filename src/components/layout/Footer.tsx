@@ -57,7 +57,7 @@ export const Footer = () => {
         {/* Copyright - Centralizado */}
         <div className="mt-8 text-center text-sm text-base-content/70 dark:text-base-content/50">
           <p>
-            © {new Date().getFullYear()} ImageLite. Todos os direitos reservados.
+            © {new Date().getFullYear()} Dev.Correria | ImageLite. Todos os direitos reservados.
           </p>
           <p className="mt-2">
             Desenvolvido com <span className="text-primary">Next.js</span> e ❤️
@@ -66,4 +66,4 @@ export const Footer = () => {
       </div>
     </footer>
   );
-};
+};          

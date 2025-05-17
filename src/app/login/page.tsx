@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import { Template, useNotification } from "@/components";
 import { LoginForm } from "@/components/forms/auth/LoginForm";
-import { useAuth } from "@/resources";
+import { useAuthStore } from "@/contexts/AuthStore"; 
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const auth = useAuth();
+  const login = useAuthStore((state) => state.login);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const checkSession = useAuthStore((state) => state.checkSession);
+
   const notification = useNotification();
   const router = useRouter();
   const { theme, systemTheme } = useTheme();
@@ -18,21 +21,24 @@ export default function LoginPage() {
   // Verifica se o componente foi montado e redireciona se o usuário já estiver autenticado
   useEffect(() => {
     setIsMounted(true);
-    if (auth.isSessionValid()) {
-      router.push("/galeria"); // Redireciona para a página inicial
-    }
-  }, [auth, router]);
+    
+    // Tenta atualizar sessão antes de redirecionar
+    (async () => {
+      await checkSession();
+      if (isAuthenticated) {
+        router.push("/galeria");
+      }
+    })();
+  }, [isAuthenticated, checkSession, router]);
 
   // Função para lidar com o login
   const handleLogin = async (values: { email: string; password: string }) => {
     setLoading(true);
     try {
-      const credentials = { email: values.email, password: values.password };
-      const accessToken = await auth.authenticate(credentials);
-      auth.initSession(accessToken);
+      await login(values.email, values.password);
       router.push("/galeria"); // Redireciona após o login
     } catch (error: any) {
-      notification.notify(error?.message, "error");
+      notification.notify(error?.message || "Erro no login", "error");
     } finally {
       setLoading(false);
     }
@@ -52,10 +58,10 @@ export default function LoginPage() {
       >
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
-            Login to Your Account
+            Entre na sua conta
           </h2>
         </div>
-  
+
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <LoginForm onSubmit={handleLogin} loading={loading} />
         </div>

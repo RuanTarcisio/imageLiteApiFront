@@ -6,15 +6,13 @@ import Image from "next/image";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { Sun, Moon, User, Settings, LogOut } from "lucide-react";
 import { Button } from "../common";
-import { useAuthContext } from "@/contexts/ProfileContext";
-import { useAuth } from "@/resources";
+import { useAuthStore } from "@/contexts/AuthStore";
 
 export const Header = () => {
   const { theme, setTheme, systemTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
-  const auth = useAuth();
-  const { isAuthenticated, profileImage, updateAuth, clearAuth } = useAuthContext();
+  const { isAuthenticated, profileImage, logout } = useAuthStore();
   // Verifica se o componente está montado para evitar hidratação
   useEffect(() => setIsMounted(true), []);
 
@@ -22,8 +20,7 @@ export const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await auth.invalidateSession();
-      clearAuth(); // Limpa o estado imediatamente
+      await logout(); // <-- Aqui está o ajuste!
       router.push("/");
       setTimeout(() => router.refresh(), 100);
     } catch (error) {
@@ -85,8 +82,11 @@ export const Header = () => {
                 className="hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary-500 dark:ring-primary-400">
-                  <Image
+                  <img
                     src={profileImage || "/default-avatar.png"}
+                    onError={(e) =>
+                      (e.currentTarget.src = "/default-avatar.png")
+                    }
                     alt="User avatar"
                     width={36}
                     height={36}
