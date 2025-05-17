@@ -20,3 +20,20 @@ body {
   color: rgb(var(--foreground-rgb));
   
 }
+
+/* No seu arquivo de estilos global */
+.profile-view-card {
+  transition: all 0.3s ease;
+}
+
+.profile-view-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button {
+  transition: transform 0.2s ease;
+}
+
+.edit-button:hover {
+  transform: translateY(-2px);
+}

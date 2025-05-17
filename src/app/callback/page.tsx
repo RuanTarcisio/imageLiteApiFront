@@ -10,36 +10,25 @@ import { Footer } from '@/components/layout';
 type AuthStatus = 'loading' | 'success' | 'error';
 
 export default function OAuthCallbackPage() {
-  const { isAuthenticated, checkSession } = useAuthStore();
+  const { isAuthenticated, loading } = useAuthStore();
   const router = useRouter();
   const [status, setStatus] = useState<AuthStatus>('loading');
-  const [counter, setCounter] = useState(3); // Reduzi para 3 segundos
-  const [error, setError] = useState<string | null>(null);
+  const [counter, setCounter] = useState(3);
 
-  // Efeito único para verificação
+  // Atualiza status baseado no loading e isAuthenticated do store
   useEffect(() => {
-    const verifyAuth = async () => {
-      try {
-        // 1. Força verificação da sessão/cookie
-        await checkSession();
-        
-        // 2. Verifica o estado atualizado
-        if (isAuthenticated) {
-          setStatus('success');
-        } else {
-          throw new Error('Authentication not confirmed');
-        }
-      } catch (err) {
-        console.error("OAuth verification error:", err);
+    if (loading) {
+      setStatus('loading');
+    } else {
+      if (isAuthenticated) {
+        setStatus('success');
+      } else {
         setStatus('error');
-        setError('Failed to verify authentication. Please try again.');
       }
-    };
+    }
+  }, [loading, isAuthenticated]);
 
-    verifyAuth();
-  }, [isAuthenticated, checkSession]);
-
-  // Redirecionamentos
+  // Redirecionamentos após sucesso
   useEffect(() => {
     if (status !== 'success') return;
 
@@ -48,7 +37,7 @@ export default function OAuthCallbackPage() {
     }, 3000);
 
     const interval = setInterval(() => {
-      setCounter(prev => prev > 0 ? prev - 1 : 0);
+      setCounter((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
     return () => {
@@ -57,16 +46,17 @@ export default function OAuthCallbackPage() {
     };
   }, [status, router]);
 
+  // Redirecionar após erro
   useEffect(() => {
-    if (status === 'error') {
-      const timer = setTimeout(() => {
-        router.push('/login');
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
+    if (status !== 'error') return;
+
+    const timer = setTimeout(() => {
+      router.push('/login');
+    }, 3000);
+
+    return () => clearTimeout(timer);
   }, [status, router]);
 
-  // Renderização condicional
   if (status === 'loading') {
     return (
       <div className='flex h-screen w-full justify-center items-center flex-col gap-8'>
@@ -81,8 +71,8 @@ export default function OAuthCallbackPage() {
     return (
       <div className='flex h-screen w-full justify-center items-center flex-col gap-8'>
         <IoAlertCircle className='text-9xl text-red-500' />
-        <h2 className='text-4xl font-bold'>Authentication Failed</h2>
-        <p className='text-lg'>{error}</p>
+        <h2 className='text-4xl font-bold'>Autenticação Falhou</h2>
+        <p className='text-lg'>Falha ao verificar autenticação.</p>
         <Link href="/login" className='mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg'>
           Return to Login
         </Link>
@@ -94,8 +84,8 @@ export default function OAuthCallbackPage() {
   return (
     <div className='flex h-screen w-full justify-center items-center flex-col gap-8'>
       <IoShieldCheckmark className='text-9xl text-green-500' />
-      <h2 className='text-4xl font-bold'>Welcome Back!</h2>
-      <p className='text-lg'>Redirecting in {counter} seconds...</p>
+      <h2 className='text-4xl font-bold'>Bem vindo outra vez!</h2>
+      <p className='text-lg'>Redirecionando eem {counter} segundos...</p>
       <Link href="/" className='mt-4 px-6 py-2 bg-green-500 text-white rounded-lg'>
         Go Now
       </Link>

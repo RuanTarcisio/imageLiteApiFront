@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -11,16 +11,17 @@ import { useAuthStore } from "@/contexts/AuthStore";
 export const Header = () => {
   const { theme, setTheme, systemTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
   const router = useRouter();
-  const { isAuthenticated, profileImage, logout } = useAuthStore();
-  // Verifica se o componente está montado para evitar hidratação
+  const { isAuthenticated, profileImage, logout, loading } = useAuthStore();
+
   useEffect(() => setIsMounted(true), []);
 
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   const handleLogout = async () => {
     try {
-      await logout(); // <-- Aqui está o ajuste!
+      await logout();
       router.push("/");
       setTimeout(() => router.refresh(), 100);
     } catch (error) {
@@ -28,7 +29,14 @@ export const Header = () => {
     }
   };
 
-  if (!isMounted) return null;
+  const avatarSrc = useMemo(() => {
+    if (avatarError || !profileImage || profileImage.trim() === "") {
+      return "/darth-vader-profile.svg";
+    }
+    return profileImage;
+  }, [profileImage, avatarError]);
+
+  if (!isMounted || loading) return null;
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
@@ -83,14 +91,12 @@ export const Header = () => {
               >
                 <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary-500 dark:ring-primary-400">
                   <img
-                    src={profileImage || "/default-avatar.png"}
-                    onError={(e) =>
-                      (e.currentTarget.src = "/default-avatar.png")
-                    }
+                    src={avatarSrc}
                     alt="User avatar"
-                    width={36}
-                    height={36}
-                    className="w-full h-full object-cover"
+                    width={48}
+                    height={48}
+                    onError={() => setAvatarError(true)}
+                    className="w-full h-full object-cover dark:bg-red-200"
                   />
                 </div>
               </MenuButton>
@@ -99,7 +105,7 @@ export const Header = () => {
                 <div className="p-1">
                   <MenuItem>
                     <button
-                      onClick={() => router.push("/profile")}
+                      onClick={() => router.push("/me/profile")}
                       className="flex items-center w-full px-4 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white"
                     >
                       <User className="mr-2 h-4 w-4" />
@@ -108,7 +114,7 @@ export const Header = () => {
                   </MenuItem>
                   <MenuItem>
                     <button
-                      onClick={() => router.push("/settings")}
+                      onClick={() => router.push("/me/settings")}
                       className="flex items-center w-full px-4 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white"
                     >
                       <Settings className="mr-2 h-4 w-4" />
@@ -151,3 +157,4 @@ export const Header = () => {
     </header>
   );
 };
+  

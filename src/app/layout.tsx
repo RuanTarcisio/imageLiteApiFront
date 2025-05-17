@@ -6,7 +6,6 @@ import { ThemeProvider } from '@/contexts/theme-provider';
 import { useAuthStore } from '@/contexts/AuthStore'; 
 import { ClientSideInitializer } from '@/components/ClientSideInitializer'; 
 
-
 const roboto = Roboto({ subsets: ['latin'], weight: "300" });
 
 export const metadata: Metadata = {
@@ -40,7 +39,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* Remove AuthProvider e adiciona ClientSideInitializer */}
           <ClientSideInitializer>
             {children}
           </ClientSideInitializer>

@@ -14,6 +14,7 @@
     "@types/react": "18.2.45",
     "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.16",
+    "cn": "^0.1.1",
     "formik": "^2.4.5",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
