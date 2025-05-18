@@ -1,9 +1,8 @@
 import './globals.css';
-import 'react-toastify/ReactToastify.min.css';
+import 'react-toastify/dist/ReactToastify.min.css'; // Corrigido o caminho
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { ThemeProvider } from '@/contexts/theme-provider';
-import { useAuthStore } from '@/contexts/AuthStore'; 
 import { ClientSideInitializer } from '@/components/ClientSideInitializer'; 
 
 const roboto = Roboto({ subsets: ['latin'], weight: "300" });
@@ -23,14 +22,13 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <head />
       <body className={roboto.className}>
         <ThemeProvider

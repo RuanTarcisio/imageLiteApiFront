@@ -9,23 +9,15 @@ export function ClientSideInitializer({
 }: {
   children: React.ReactNode;
 }) {
-  const [isClient, setIsClient] = useState(false);
-  const { loading, isAuthenticated } = useAuthStore();
-  const checkSession = useAuthStore((state) => state.checkSession);
+  const [isMounted, setIsMounted] = useState(false);
+  const { loading, checkSession } = useAuthStore();
 
-  console.log("isAuthenticated:", isAuthenticated, "loading:", loading);
-  
   useEffect(() => {
-    setIsClient(true);
-    
-    async function init() {
-      await checkSession();
-    }
-    
-    init();
+    setIsMounted(true);
+    checkSession();
   }, [checkSession]);
 
-  if (!isClient || loading) {
+  if (!isMounted || loading) {
     return <LoadingScreen />;
   }
 
