@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Imagelite Web - Front-end</title>
-</head>
+
 <body>
   <h1>🌐 Imagelite Web (Front-end)</h1>
   <p>Aplicação frontend feita com <strong>Next.js</strong> para acesso à Imagelite API.</p>
